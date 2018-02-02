@@ -2,7 +2,7 @@
 
 Name:           libvarlink
 Version:        1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Varlink C Library
 License:        ASL 2.0
 URL:            https://github.com/varlink/%{name}
@@ -60,5 +60,8 @@ export LC_CTYPE=C.utf8
 %{_libdir}/pkgconfig/libvarlink.pc
 
 %changelog
+* Fri Feb 02 2018 Harald Hoyer <harald@redhat.com> - 1-2
+- bump release
+
 * Fri Feb  2 2018 <kay@redhat.com>
 - libvarlink 1
