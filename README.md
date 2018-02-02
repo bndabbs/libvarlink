@@ -1,3 +1,0 @@
-# libvarlink
-
-The libvarlink package
