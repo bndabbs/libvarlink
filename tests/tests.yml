@@ -1,0 +1,12 @@
+- hosts: localhost
+  roles:
+    - role: standard-test-beakerlib
+      tags:
+        - classic
+      tests:
+        - sanity
+      required_packages:
+        - libvarlink
+        - meson
+        - ninja-build
+        - gcc
