@@ -41,9 +41,7 @@ export LC_CTYPE=C.utf8
 %install
 %meson_install
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 %files
 %license LICENSE
