@@ -1,8 +1,8 @@
 %global _hardened_build 1
 
 Name:           libvarlink
-Version:        15
-Release:        2%{?dist}
+Version:        17
+Release:        1%{?dist}
 Summary:        Varlink C Library
 License:        ASL 2.0
 URL:            https://github.com/varlink/%{name}
@@ -58,6 +58,9 @@ export LC_CTYPE=C.utf8
 %{_libdir}/pkgconfig/libvarlink.pc
 
 %changelog
+* Fri Feb 15 2019 Harald Hoyer <harald@redhat.com> - 17-1
+- libvarlink 17
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 15-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
