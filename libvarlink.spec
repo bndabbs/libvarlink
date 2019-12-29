@@ -10,7 +10,7 @@ Release:        1%{?dist}
 Summary:        Varlink C Library
 License:        ASL 2.0
 URL:            https://github.com/varlink/%{name}
-Source0:        https://github.com/varlink/%{name}/archive/%{version}/%{name}-%{version}.tar.gz
+Source0:        https://github.com/varlink/%{name}/archive/%{version}.tar.gz
 
 %if !0%{?with_meson}
 Patch0001:      0001-Revert-autotools-build-system-removal.patch
