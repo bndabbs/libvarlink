@@ -1,13 +1,29 @@
 %global _hardened_build 1
 
+%if 0%{?fedora}
+%global with_meson 1
+%endif
+
 Name:           libvarlink
 Version:        18
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Varlink C Library
 License:        ASL 2.0
 URL:            https://github.com/varlink/%{name}
 Source0:        https://github.com/varlink/%{name}/archive/%{version}/%{name}-%{version}.tar.gz
+
+%if !0%{?with_meson}
+Patch0001:      0001-Revert-autotools-build-system-removal.patch
+Patch0002:      0002-Add-aarch64-build-support.patch
+%endif
+
+%if 0%{?with_meson}
 BuildRequires:  meson
+%else
+BuildRequires:  autoconf
+BuildRequires:  automake
+%endif
+BuildRequires:  git
 BuildRequires:  gcc
 
 %description
@@ -28,20 +44,39 @@ Summary:        Varlink command line tools
 The %{name}-util package contains varlink command line tools.
 
 %prep
-%setup -q
+%autosetup -S git
 
 %build
+%if 0%{?with_meson}
 %meson
 %meson_build
+%else
+./autogen.sh
+%configure
+%make_build
+%endif
 
 %check
 export LC_CTYPE=C.utf8
+%if 0%{?with_meson}
 %meson_test
+%else
+# FIXME(hguemar): lib/test-symbols.sh fails on ppc64le
+%ifnarch %{power64}
+make check
+%endif
+%endif
 
 %install
+%if 0%{?with_meson}
 %meson_install
+%else
+%make_install
+%endif
 
-%ldconfig_scriptlets
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
 
 %files
 %license LICENSE
@@ -58,56 +93,8 @@ export LC_CTYPE=C.utf8
 %{_libdir}/pkgconfig/libvarlink.pc
 
 %changelog
-* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 18-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+* Sat Dec  28 2019 Bradford Dabbs <bndabbs@gmail.com> - 18-1
+- Update to 18
 
-* Wed May 22 2019 Harald Hoyer <harald@redhat.com> - 18-1
-- libvarlink 18
-
-* Fri Feb 15 2019 Harald Hoyer <harald@redhat.com> - 17-1
-- libvarlink 17
-
-* Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 15-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
-
-* Tue Oct  9 2018 <info@varlink.org> 15-1
-- libvarlink 15
-
-* Mon Oct  8 2018 <info@varlink.org> 14-1
-- libvarlink 14
-
-* Mon Jul 16 2018 <kay@redhat.com> - 12-1
-- libvarlink 12
-
-* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 11-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
-
-* Sun Jun 17 2018 <kay@redhat.com>
-- libvarlink 11
-
-* Sat May 12 2018  <kay@redhat.com>
-- libvarlink 10
-
-* Fri Apr 13 2018 <kay@redhat.com>
-- libvarlink 9
-
-* Thu Apr 12 2018 <kay@redhat.com>
-- libvarlink 8
-
-* Mon Mar 26 2018 <kay@redhat.com>
-- libvarlink 7
-
-* Mon Mar 26 2018 <kay@redhat.com>
-- libvarlink 6
-
-* Fri Mar 23 2018 <kay@redhat.com>
-- libvarlink 5
-
-* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
-
-* Fri Feb 02 2018 Harald Hoyer <harald@redhat.com> - 1-2
-- bump release
-
-* Fri Feb  2 2018 <kay@redhat.com>
-- libvarlink 1
+* Mon Sep  3 2018 Haïkel Guémar <hguemar@fedoraproject.org> - 12-1
+- Initial packaging for RDO
